@@ -52,7 +52,7 @@ export default function CoinCapPage() {
       setCoin(dataCoin);
     }
     fetchData();
-  }, []);
+  }, [prices]);
 
   useEffect(() => {
     async function fetchData() {
@@ -62,9 +62,12 @@ export default function CoinCapPage() {
     fetchData();
   }, []);
 
+  if (+prices.bitcoin > 0) {
+  }
+
   return (
     <div className="md:p-4 md:pt-8">
-      <div className=" hidden md:block md:p-4 md:bg-slate-700 md:rounded-md">
+      <div className=" hidden md:block md:p-4 md:bg-slate-800 md:rounded-t-md">
         <ul className=" hidden md:flex justify-around items-center text-center">
           <li>
             <h2>Volume Disponível</h2>
@@ -90,33 +93,39 @@ export default function CoinCapPage() {
           </li>
         </ul>
       </div>
-      <Table>
+      <Table className=" bg-slate-600 rounded-b-md">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[50px] hidden md:table-cell">#</TableHead>
-            <TableHead className="w-[200px]">Cripto</TableHead>
-            <TableHead className="w-[50px] hidden md:table-cell">
-              Nome
+            <TableHead className="w-[50px] hidden md:table-cell text-slate-800">
+              #
             </TableHead>
-            <TableHead className="hidden min-[425px]:table-cell">
-              Symbol
+            <TableHead className="w-[200px] text-slate-800">Cripto</TableHead>
+            <TableHead className="text-slate-800">USD</TableHead>
+            <TableHead className="text-slate-800">BRL</TableHead>
+            <TableHead className="hidden md:table-cell text-slate-800">
+              24h
             </TableHead>
-            <TableHead>USD</TableHead>
-            <TableHead>BRL</TableHead>
+            <TableHead className=" w-[100px] hidden md:table-cell text-slate-800">
+              Preço Médio 24h
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {coin?.data?.map((coin) => {
             return (
               <TableRow
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open(coin.explorer);
+                }}
                 key={coin.id}
                 className={`${
                   parseFloat(prices[coin.name.toLowerCase()]) >
                   parseFloat(coin.priceUsd)
-                    ? "bg-emerald-300"
+                    ? "bg-emerald-700"
                     : parseFloat(prices[coin.name.toLowerCase()]) <
                         parseFloat(coin.priceUsd)
-                      ? "bg-rose-300"
+                      ? "bg-rose-700"
                       : "inherit"
                 } transition duration-1000`}
               >
@@ -133,16 +142,9 @@ export default function CoinCapPage() {
                   />
                   <div className=" ">
                     <p>{coin.name}</p>
-                    <span className=" text-slate-500">{coin.symbol}</span>
+                    <span className=" text-slate-400">{coin.symbol}</span>
                   </div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  {coin.name}
-                </TableCell>
-                <TableCell className="hidden min-[425px]:table-cell">
-                  {coin.symbol}
-                </TableCell>
-
                 <TableCell>
                   $
                   {parseFloat(prices[coin.name.toLowerCase()])
@@ -162,6 +164,14 @@ export default function CoinCapPage() {
                         parseFloat(coin.priceUsd) *
                         parseFloat(dolar.USDBRL?.high)
                       ).toLocaleString()}
+                </TableCell>
+                <TableCell
+                  className={`hidden md:table-cell ${+coin.changePercent24Hr < 0 ? "text-rose-300" : "text-emerald-300"}`}
+                >
+                  {(+coin.changePercent24Hr).toFixed(2)}%
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  R${(+coin.vwap24Hr).toLocaleString()}
                 </TableCell>
               </TableRow>
             );

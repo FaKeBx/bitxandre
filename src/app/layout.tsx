@@ -1,6 +1,6 @@
-"use client";
 import Menu from "@/components/menu/page";
 import { nabla, poppins } from "@/fonts";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 export default function RootLayout({
@@ -13,6 +13,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} bg-slate-900 text-slate-50`}>
         <Menu />
         {children}
+        <Analytics />
       </body>
     </html>
   );
