@@ -5,7 +5,7 @@ export async function getPrice() {
     "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100",
     {
       headers: {
-        "X-CMC_PRO_API_KEY": process.env.API_KEY!,
+        "X-CMC_PRO_API_KEY": process.env.API_KEY || "",
       },
     },
   );
